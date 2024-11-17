@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pertemuan6/input_form.dart';
 import 'package:pertemuan6/input_validation.dart';
 import 'main.dart';
 
@@ -14,7 +15,8 @@ class _DynamicBottomNavbarState extends State<DynamicBottomNavbar> {
 
   final List<Widget> _pages = <Widget>[
     const MyInput(),
-    const MyFormValidation()
+    const MyFormValidation(),
+    const MyInputForm(),
   ];
 
   void onTabTapped(int index) {
@@ -36,8 +38,12 @@ class _DynamicBottomNavbarState extends State<DynamicBottomNavbar> {
             label: 'Latihan',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.task_alt_outlined),
+            icon: Icon(Icons.input_outlined),
             label: 'Form Validation',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dynamic_form_rounded),
+            label: 'Form Input',
           ),
         ],
         backgroundColor: Colors.blueAccent,
@@ -47,4 +53,3 @@ class _DynamicBottomNavbarState extends State<DynamicBottomNavbar> {
     );
   }
 }
-

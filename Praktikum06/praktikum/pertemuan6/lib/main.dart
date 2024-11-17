@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'bottom_navbar.dart';
+import 'package:pertemuan6/bottom_navbar.dart';
 
 void main() {
   runApp(const MainApp());
@@ -30,9 +29,8 @@ class MyInput extends StatefulWidget {
 
 class _MyInputState extends State<MyInput> {
   TextEditingController _controller = TextEditingController();
-
   bool lightOn = false;
-  String language = 'Dart';
+  String? language;
   bool agree = false;
 
   @override
@@ -80,47 +78,50 @@ class _MyInputState extends State<MyInput> {
                 );
               },
             ),
-            Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-              ListTile(
-                leading: Radio<String>(
-                  value: 'Dart',
-                  groupValue: language,
-                  onChanged: (String? value) {
-                    setState(() {
-                      language = value!;
-                      showSnackbar();
-                    });
-                  },
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: Radio<String>(
+                    value: 'Dart',
+                    groupValue: language,
+                    onChanged: (String? value) {
+                      setState(() {
+                        language = value;
+                        showSnackBar();
+                      });
+                    },
+                  ),
+                  title: Text('Dart'),
                 ),
-                title: Text('Dart'),
-              ),
-              ListTile(
-                leading: Radio<String>(
-                  value: 'Kotlin',
-                  groupValue: language,
-                  onChanged: (String? value) {
-                    setState(() {
-                      language = value!;
-                      showSnackbar();
-                    });
-                  },
+                ListTile(
+                  leading: Radio<String>(
+                    value: 'Kotlin',
+                    groupValue: language,
+                    onChanged: (String? value) {
+                      setState(() {
+                        language = value;
+                        showSnackBar();
+                      });
+                    },
+                  ),
+                  title: Text('Kotlin'),
                 ),
-                title: Text('Kotlin'),
-              ),
-              ListTile(
-                leading: Radio<String>(
-                  value: 'Swift',
-                  groupValue: language,
-                  onChanged: (String? value) {
-                    setState(() {
-                      language = value!;
-                      showSnackbar();
-                    });
-                  },
+                ListTile(
+                  leading: Radio<String>(
+                    value: 'Swift',
+                    groupValue: language,
+                    onChanged: (String? value) {
+                      setState(() {
+                        language = value;
+                        showSnackBar();
+                      });
+                    },
+                  ),
+                  title: Text('Swift'),
                 ),
-                title: Text('Swift'),
-              ),
-            ]),
+              ],
+            ),
             ListTile(
               leading: Checkbox(
                 value: agree,
@@ -144,21 +145,21 @@ class _MyInputState extends State<MyInput> {
     );
   }
 
-
-  void showSnackbar() {
+  @override
+  // ignore: override_on_non_overriding_member
+  void showSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("$language selected"),
+        content: Text('$language selected'),
         duration: Duration(seconds: 1),
       ),
     );
   }
-  
 
   @override
-  void dispose() {
+  // ignore: override_on_non_overriding_member, non_constant_identifier_names
+  void_dispose() {
     _controller.dispose();
     super.dispose();
   }
 }
-
