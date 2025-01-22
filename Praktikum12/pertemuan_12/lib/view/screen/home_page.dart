@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pertemuan_12/model/contacts_model.dart';
 import 'package:pertemuan_12/services/api_services.dart';
 import 'package:pertemuan_12/view/widget/contact_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,10 +17,26 @@ class _HomePageState extends State<HomePage> {
   final _numberCtl = TextEditingController();
   String _result = '-';
   final ApiServices _dataService = ApiServices();
-  List<ContactsModel> _contactMdl = [];
+  final List<ContactsModel> _contactMdl = [];
   ContactResponse? ctRes;
   bool isEdit = false;
   String idContact = '';
+
+  late SharedPreferences loginData;
+  String username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    initial();
+  }
+
+  void initial() async {
+    loginData = await SharedPreferences.getInstance();
+    setState(() {
+      username = loginData.getString('username').toString();
+    });
+  }
 
   @override
   void dispose() {
@@ -42,6 +59,30 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Card with username
+              Card(
+                elevation: 4,
+                margin: const EdgeInsets.symmetric(vertical: 2.0),
+                color: Colors.tealAccent,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.account_circle_rounded),
+                      const SizedBox(width: 8.0),
+                      Text(
+                        'Login sebagai : $username',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20.0),
+
+              // Form Fields
               TextFormField(
                 controller: _nameCtl,
                 validator: _validateName,
@@ -77,11 +118,12 @@ class _HomePageState extends State<HomePage> {
                     spacing: 8.0,
                     children: [
                       ElevatedButton(
-                        onPressed: () async{
+                        onPressed: () async {
                           final isValidForm = _formKey.currentState!.validate();
-                          if (_nameCtl.text.isEmpty || 
-                          _numberCtl.text.isEmpty) {
-                            displaySnackbar('Nama dan Nomor HP tidak boleh kosong');
+                          if (_nameCtl.text.isEmpty ||
+                              _numberCtl.text.isEmpty) {
+                            displaySnackbar(
+                                'Nama dan Nomor HP tidak boleh kosong');
                             return;
                           } else if (!isValidForm) {
                             displaySnackbar('Isi form dengan benar');
@@ -94,11 +136,12 @@ class _HomePageState extends State<HomePage> {
 
                           ContactResponse? res;
                           if (isEdit) {
-                            res = await _dataService.putContact(idContact, postModel);
+                            res = await _dataService.putContact(
+                                idContact, postModel);
                           } else {
                             res = await _dataService.postContact(postModel);
                           }
-                          
+
                           setState(() {
                             ctRes = res;
                             isEdit = false;
@@ -162,8 +205,8 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8.0),
               Expanded(
-                child: 
-                  _contactMdl.isEmpty ? Text(_result) : _buildListContact(),
+                child:
+                    _contactMdl.isEmpty ? Text(_result) : _buildListContact(),
               ),
               const SizedBox(
                 height: 20,
@@ -181,7 +224,6 @@ class _HomePageState extends State<HomePage> {
         final ctList = _contactMdl[index];
         return Card(
           child: ListTile(
-            // leading: Text(user.id),
             title: Text(ctList.namaKontak),
             subtitle: Text(ctList.nomorHp),
             trailing: Row(
@@ -189,7 +231,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 IconButton(
                   onPressed: () async {
-                    final contacts = await _dataService.getSingleContact(ctList.id);
+                    final contacts =
+                        await _dataService.getSingleContact(ctList.id);
                     setState(() {
                       if (contacts != null) {
                         _nameCtl.text = contacts.namaKontak;
@@ -251,7 +294,6 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () async {
-                // Menangani penghapusan kontak
                 ContactResponse? res = await _dataService.deleteContact(id);
                 setState(() {
                   ctRes = res;
@@ -267,16 +309,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   Future<void> refreshContactList() async {
     final users = await _dataService.getAllContact();
     setState(() {
-      // Bersihkan daftar kontak jika tidak kosong
       if (_contactMdl.isNotEmpty) _contactMdl.clear();
 
-      // Tambahkan data baru jika tersedia
       if (users != null) {
-        // Konversi Iterable ke List, kemudian gunakan reversed
         _contactMdl.addAll(users.toList().reversed);
       }
     });

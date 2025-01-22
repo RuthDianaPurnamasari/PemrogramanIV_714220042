@@ -5,7 +5,7 @@ class ContactCard extends StatelessWidget {
   final ContactResponse ctRes;
   final Function() onDismissed;
 
-  const ContactCard({Key? key, required this.ctRes, required this.onDismissed}) : super(key: key);
+  const ContactCard({super.key, required this.ctRes, required this.onDismissed});
 
   @override
   Widget build(BuildContext context) {

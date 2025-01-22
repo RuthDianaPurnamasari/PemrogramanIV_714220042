@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'view/screen/home_page.dart';
+import 'package:pertemuan_12/view/screen/login_page.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
         useMaterial3: false,
       ),
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }
